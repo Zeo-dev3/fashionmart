@@ -1,0 +1,14 @@
+postgres:
+  Port: 5432
+  Host: database
+  User: admin
+  Password: admin
+  Name: store_db
+
+server:
+  AppName: fashionmart-api
+  Port: :3000
+  Prefork: false
+
+jwt:
+  SecretKey: UwI3B03mFDV1gefDnCB0DQoFy9/rlZ8MNw4ksu2X1NzSSy9gcziNWxzsMKIZdGhn1DTEczB7YJ4uH3lfErTkaQ==
