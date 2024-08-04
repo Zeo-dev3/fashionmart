@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -11,13 +13,15 @@ const (
 )
 
 type User struct {
-	ID       uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
-	Name     string    `gorm:"type:varchar(255)"`
-	Email    string    `gorm:"type:varchar(320);unique"`
-	Password string    `gorm:"type:varchar(255)"`
-	Address  string    `json:"address"`
-	Phone    string    `gorm:"type:varchar(16)"`
-	Role     string    `gorm:"type:varchar(50);default:'user'"`
+	ID        uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
+	Name      string    `gorm:"type:varchar(255)"`
+	Email     string    `gorm:"type:varchar(320);unique"`
+	Password  string    `gorm:"type:varchar(255)"`
+	Address   string    `json:"address"`
+	Phone     string    `gorm:"type:varchar(16)"`
+	Role      string    `gorm:"type:varchar(50);default:'user'"`
+	CreatedAt time.Time `gorm:"autoCreateTime"`
+	UpdatedAt time.Time `gorm:"autoCreateTime;autoUpdateTime"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {

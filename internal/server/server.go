@@ -36,7 +36,11 @@ func (s *Server) Run() error {
 	s.db.Exec("CREATE EXTENSION IF NOT EXISTS\"uuid-ossp\"")
 
 	if err := entity.MigrateUserEntity(s.db); err != nil {
-		log.Println("failed to migrate user entity", err)
+		log.Println("failed to migrate user entity ", err)
+	}
+
+	if err := entity.MigrateProductEntityDomain(s.db); err != nil {
+		log.Println("failed to migrate product domain ", err)
 	}
 
 	go func() {

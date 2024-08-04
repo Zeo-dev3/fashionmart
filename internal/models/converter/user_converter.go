@@ -17,7 +17,8 @@ func ToUserEntity(user models.UserRegister) entity.User {
 
 func ToUserResponse(user entity.User) models.UserResponse {
 	return models.UserResponse{
-		ID:    user.ID.String(),
-		Email: user.Email,
+		ID:        user.ID.String(),
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
 	}
 }

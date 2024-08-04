@@ -5,12 +5,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func NewAuthRoute(app *fiber.App, h auth.Handler, authMW fiber.Handler,adminMW fiber.Handler) {
+func MapAuthRoutes(app *fiber.App, h auth.Handler, authMW fiber.Handler, adminMW fiber.Handler) {
 	group := app.Group("/auth")
 
 	group.Post("/register", h.Register())
 	group.Post("/login", h.Login())
 	group.Get("/check", authMW, h.Check())
-	group.Get("/check/admin",authMW,adminMW,h.CheckAdmin())
-	group.Post("/update-role",authMW,h.UpdateRole())
+	group.Get("/check/admin", authMW, adminMW, h.CheckAdmin())
+	group.Post("/update-role", authMW, h.UpdateRole())
 }

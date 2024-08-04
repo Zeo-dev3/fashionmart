@@ -44,6 +44,7 @@ func (h authHandler) Register() fiber.Handler {
 				"user_id":    userResp.ID,
 				"user_email": userResp.Email,
 			},
+			"created_at": userResp.CreatedAt,
 		})
 	}
 }
@@ -123,7 +124,7 @@ func (h authHandler) UpdateRole() fiber.Handler {
 func (h authHandler) CheckAdmin() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
-			"message":"yang admin admin aja ygy",
+			"message": "yang admin admin aja ygy",
 		})
-	}	
+	}
 }

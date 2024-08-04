@@ -71,7 +71,7 @@ func generateJwtToken(user entity.User, secretKey string) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id":    user.ID,
 		"user_email": user.Email,
-		"user_role": user.Role,
+		"user_role":  user.Role,
 		"exp":        time.Now().Add(time.Minute * 30).Unix(),
 	}
 

@@ -1,24 +1,35 @@
 package server
 
 import (
-	"github.com/Zeo-dev3/fashionmart/internal/auth/delivery/http"
-	"github.com/Zeo-dev3/fashionmart/internal/auth/repository"
-	"github.com/Zeo-dev3/fashionmart/internal/auth/usecase"
+	authHttp "github.com/Zeo-dev3/fashionmart/internal/auth/delivery/http"
+	authRepository "github.com/Zeo-dev3/fashionmart/internal/auth/repository"
+	authUsecase "github.com/Zeo-dev3/fashionmart/internal/auth/usecase"
 	"github.com/Zeo-dev3/fashionmart/internal/middleware"
+	productHttp "github.com/Zeo-dev3/fashionmart/internal/product/delivery/http"
+	productRepository "github.com/Zeo-dev3/fashionmart/internal/product/repository"
+	productUsecase "github.com/Zeo-dev3/fashionmart/internal/product/usecase"
 	"github.com/gofiber/fiber/v2"
 )
 
 func (s *Server) MapHandlres(app *fiber.App) error {
-	authRepo := repository.NewAuthRepo(s.db)
+	// setup repository
+	authRepo := authRepository.NewAuthRepo(s.db)
+	productRepo := productRepository.NewProductRepository(s.db)
 
-	authUC := usecase.NewAuthUseCase(authRepo, s.cfg)
+	// setup usecase
+	authUC := authUsecase.NewAuthUseCase(authRepo, s.cfg)
+	productUC := productUsecase.NewProductUsecas(productRepo)
 
-	authHandler := http.NewAuthHandler(authUC)
+	// setup handler
+	authHandler := authHttp.NewAuthHandler(authUC)
+	productHandler := productHttp.NewProductHandler(productUC)
 
+	// setup middleware
 	authMiddleware := middleware.AuthJwtMiddleware(s.cfg)
 	adminMiddleware := middleware.AdminRoleAuth()
 
-	http.NewAuthRoute(s.app, authHandler, authMiddleware,adminMiddleware)
+	authHttp.MapAuthRoutes(s.app, authHandler, authMiddleware, adminMiddleware)
+	productHttp.MapProductRoutes(s.app, productHandler, authMiddleware, adminMiddleware)
 
 	return nil
 }

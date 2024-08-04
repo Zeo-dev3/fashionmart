@@ -43,16 +43,16 @@ func AuthJwtMiddleware(cfg *config.Config) fiber.Handler {
 
 		c.Locals("user_id", claims["user_id"])
 		c.Locals("user_email", claims["user_email"])
-		c.Locals("user_role",claims["user_role"])
+		c.Locals("user_role", claims["user_role"])
 
 		return c.Next()
 	}
 }
 
-func AdminRoleAuth() fiber.Handler{
+func AdminRoleAuth() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		userRole := c.Locals("user_role")
-		if userRole != "Admin"{
+		if userRole != "Admin" {
 			return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "Forbidden"})
 		}
 

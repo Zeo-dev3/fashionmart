@@ -1,6 +1,10 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type UserRegister struct {
 	Name     string `json:"name"`
@@ -12,8 +16,9 @@ type UserRegister struct {
 }
 
 type UserResponse struct {
-	ID    string
-	Email string
+	ID        string
+	Email     string
+	CreatedAt time.Time
 }
 
 type LoginDto struct {
