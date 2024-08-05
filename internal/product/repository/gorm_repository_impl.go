@@ -50,3 +50,41 @@ func (r *productRepository) GetById(ctx context.Context, id uint) (entity.Produc
 
 	return product, nil
 }
+
+func (r *productRepository) AddColor(ctx context.Context, productId uint, colors []*entity.Color) error {
+	product := &entity.Product{}
+
+	tx := r.db.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	// mencari product dengan id dari argument function
+	if err := tx.Where("id = ?", productId).First(product).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			tx.Rollback()
+			return fmt.Errorf("product with ID %d not found. Please check product ID and try again", productId)
+		}
+
+		return err
+	}
+
+	// mencoba untuk menyimpan data color ke product
+	if err := tx.Model(product).Association("Colors").Append(&colors); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Commit().Error; err != nil{
+		return err
+	}
+
+	return nil
+}
+
+func (r *productRepository) GetAll(ctx context.Context) ([]entity.Product, error) {
+	var products []entity.Product
+	result := r.db.WithContext(ctx).Preload("Colors").Preload("Sizes").Find(&products)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return products, nil
+}

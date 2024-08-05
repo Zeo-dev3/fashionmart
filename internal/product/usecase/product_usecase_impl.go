@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 
+	"github.com/Zeo-dev3/fashionmart/internal/entity"
 	"github.com/Zeo-dev3/fashionmart/internal/models"
 	"github.com/Zeo-dev3/fashionmart/internal/models/converter"
 	"github.com/Zeo-dev3/fashionmart/internal/product"
@@ -41,4 +42,21 @@ func (u *productUsecase) GetProductById(ctx context.Context, id uint) (models.Pr
 	productResponse := converter.ToProductDetailResp(&product)
 
 	return productResponse, nil
+}
+
+func (u *productUsecase) AddProductColor(ctx context.Context, productId uint, colors []*entity.Color) error {
+	err := u.productRepo.AddColor(ctx, productId, colors)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *productUsecase) GetAllProducts(ctx context.Context) ([]models.ProductDetailResponse, error) {
+	products, err := u.productRepo.GetAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return converter.ToProductDetailResponses(products), nil
 }

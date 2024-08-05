@@ -9,4 +9,6 @@ import (
 type Reporitory interface {
 	CreateProduct(ctx context.Context, product *entity.Product) error
 	GetById(ctx context.Context, id uint) (entity.Product, error)
+	AddColor(ctx context.Context, productId uint, colors []*entity.Color) error
+	GetAll(ctx context.Context) ([]entity.Product, error)
 }

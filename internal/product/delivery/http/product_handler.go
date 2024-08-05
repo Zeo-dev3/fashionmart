@@ -2,8 +2,10 @@ package http
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 
+	"github.com/Zeo-dev3/fashionmart/internal/entity"
 	"github.com/Zeo-dev3/fashionmart/internal/models"
 	"github.com/Zeo-dev3/fashionmart/internal/product"
 	"github.com/gofiber/fiber/v2"
@@ -71,5 +73,42 @@ func (h *productHandler) GetProductById() fiber.Handler {
 		return c.JSON(fiber.Map{
 			"product_data": product,
 		})
+	}
+}
+
+func (h *productHandler) AddProductColor() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		ctx := c.Context()
+		idParam := c.Params("id")
+		productId, err := strconv.ParseUint(idParam, 10, 32)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Invalid product ID",
+			})
+		}
+
+		var colors []*entity.Color
+		if err := c.BodyParser(&colors); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
+		}
+
+		if err := h.productUC.AddProductColor(ctx, uint(productId), colors); err != nil {
+			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"message": "colors added successfully",
+		})
+	}
+}
+
+func (h *productHandler) GetAllProducts() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		ctx := c.Context()
+		products, err := h.productUC.GetAllProducts(ctx)
+		if err != nil {
+			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
+		return c.Status(http.StatusOK).JSON(products)
 	}
 }
