@@ -4,7 +4,7 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - db
+      - database
       
   database:
     image: postgres:latest
