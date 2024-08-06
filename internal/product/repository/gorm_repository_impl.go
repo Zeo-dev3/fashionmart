@@ -88,3 +88,32 @@ func (r *productRepository) GetAll(ctx context.Context) ([]entity.Product, error
 	}
 	return products, nil
 }
+
+func (r *productRepository) AddSize(ctx context.Context,productId uint,sizes []*entity.Size) error {
+	product := &entity.Product{}
+
+	tx := r.db.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	if err := tx.Where("id = ?",productId).First(product).Error; err != nil{
+		tx.Rollback()
+		if errors.Is(err,gorm.ErrRecordNotFound){
+			return fmt.Errorf("failed find product with id %d",productId)
+		}
+		return err
+	}
+
+	if err := tx.Model(product).Association("Sizes").Append(sizes); err != nil{
+		tx.Rollback()
+		return fmt.Errorf("failed to add color for product with id %d",productId)
+	}
+
+	if err := tx.Commit().Error; err != nil{
+		tx.Rollback()
+		return fmt.Errorf("failed to commit change")
+	}
+
+	tx.Commit()
+
+	return nil
+}

@@ -33,8 +33,10 @@ func (s *Server) Run() error {
 		return err
 	}
 
+	// bikin ekstensi buat tipe data uuid di postgres
 	s.db.Exec("CREATE EXTENSION IF NOT EXISTS\"uuid-ossp\"")
 
+	// migrasi semua table
 	if err := entity.MigrateUserEntity(s.db); err != nil {
 		log.Println("failed to migrate user entity ", err)
 	}
@@ -43,6 +45,7 @@ func (s *Server) Run() error {
 		log.Println("failed to migrate product domain ", err)
 	}
 
+	// listener buat http request
 	go func() {
 		s.app.Listen(s.cfg.Server.Port)
 	}()

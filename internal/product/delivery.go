@@ -7,4 +7,5 @@ type Handler interface {
 	GetProductById() fiber.Handler
 	AddProductColor() fiber.Handler
 	GetAllProducts() fiber.Handler
+	AddProductSize() fiber.Handler
 }

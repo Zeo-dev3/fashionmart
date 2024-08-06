@@ -2,6 +2,7 @@ package http
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -110,5 +111,37 @@ func (h *productHandler) GetAllProducts() fiber.Handler {
 			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 		}
 		return c.Status(http.StatusOK).JSON(products)
+	}
+}
+
+func (h *productHandler) AddProductSize() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		ctx := c.Context()
+		idParam := c.Params("id")
+
+		idUint64, err := strconv.ParseUint(idParam, 10, 64)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": fmt.Sprintf("Invalid ID format: %s", idParam),
+			})
+		}
+
+		var sizes []*entity.Size
+		if err := c.BodyParser(&sizes); err != nil{
+			log.Println(sizes)
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"message":"invalid request body",
+			})
+		}
+
+		productId := uint(idUint64)
+
+		if err := h.productUC.AddProductSize(ctx,productId,sizes);err != nil {
+			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
+
+		return c.JSON(fiber.Map{
+			"message":"size added successfully",
+		})
 	}
 }

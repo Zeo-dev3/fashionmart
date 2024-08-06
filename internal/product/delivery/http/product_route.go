@@ -12,4 +12,5 @@ func MapProductRoutes(app *fiber.App, productHandler product.Handler, authMW fib
 	group.Post("/", authMW, adminMw, productHandler.AddProduct())
 	group.Get("/:id", productHandler.GetProductById())
 	group.Post("/:id/colors", authMW, adminMw, productHandler.AddProductColor())
+	group.Post("/:id/sizes",authMW,adminMw,productHandler.AddProductSize())
 }
