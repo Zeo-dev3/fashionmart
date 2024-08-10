@@ -1,18 +1,24 @@
-FROM golang:1.22.5
-
-ENV config=docker
+FROM golang:1.22.5 AS builder
 
 WORKDIR /app
 
-COPY ./ /app
+COPY go.mod go.sum ./
 
 RUN go mod download
 
-COPY ./wait-for-it.sh /usr/local/bin/wait-for-it.sh
-RUN chmod +x /usr/local/bin/wait-for-it.sh
+COPY . .
 
-RUN go build -o main ./cmd/api
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix nocgo -o main ./cmd/api
+
+# runtime
+FROM alpine:latest
+
+WORKDIR /app
+
+COPY --from=builder /app .
+
+ENV config=docker
 
 EXPOSE 3000
 
-CMD [ "wait-for-it.sh","db:5432","--","./main" ]
+CMD ["./main"]

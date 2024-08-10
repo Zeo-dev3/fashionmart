@@ -3,6 +3,7 @@ package http
 import (
 	"github.com/Zeo-dev3/fashionmart/internal/auth"
 	"github.com/Zeo-dev3/fashionmart/internal/models"
+	"github.com/Zeo-dev3/fashionmart/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -19,7 +20,7 @@ func (h authHandler) Register() fiber.Handler {
 		var user models.UserRegister
 		ctx := c.Context()
 
-		if err := c.BodyParser(&user); err != nil {
+		if err := utils.ValidateRequest(c, &user); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"message": "cannot parse json",
 			})
@@ -54,7 +55,7 @@ func (h authHandler) Login() fiber.Handler {
 		var user models.LoginDto
 		ctx := c.Context()
 
-		err := c.BodyParser(&user)
+		err := utils.ValidateRequest(c, &user)
 		if err != nil {
 			return c.JSON(fiber.Map{
 				"message": "invalid request payload",

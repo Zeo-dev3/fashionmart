@@ -11,5 +11,5 @@ type Reporitory interface {
 	GetById(ctx context.Context, id uint) (entity.Product, error)
 	AddColor(ctx context.Context, productId uint, colors []*entity.Color) error
 	GetAll(ctx context.Context) ([]entity.Product, error)
-	AddSize(ctx context.Context,productId uint,sizes []*entity.Size) error
+	AddSize(ctx context.Context, productId uint, sizes []*entity.Size) error
 }

@@ -3,7 +3,7 @@ package models
 import "time"
 
 type ProductRequest struct {
-	Name          string `json:"name"`
+	Name          string `json:"name" validate:"required"`
 	Description   string `json:"description"`
 	CurrentPrice  int    `json:"current_price"`
 	OriginalPrice int    `json:"original_price"`

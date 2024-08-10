@@ -9,6 +9,7 @@ import (
 	"github.com/Zeo-dev3/fashionmart/internal/entity"
 	"github.com/Zeo-dev3/fashionmart/internal/models"
 	"github.com/Zeo-dev3/fashionmart/internal/product"
+	"github.com/Zeo-dev3/fashionmart/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -27,7 +28,7 @@ func (h *productHandler) AddProduct() fiber.Handler {
 		var productReq models.ProductRequest
 		ctx := c.Context()
 
-		if err := c.BodyParser(&productReq); err != nil {
+		if err := utils.ValidateRequest(c,&productReq); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"message": "bad request, cannot parse json",
 			})
@@ -127,21 +128,21 @@ func (h *productHandler) AddProductSize() fiber.Handler {
 		}
 
 		var sizes []*entity.Size
-		if err := c.BodyParser(&sizes); err != nil{
+		if err := c.BodyParser(&sizes); err != nil {
 			log.Println(sizes)
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"message":"invalid request body",
+				"message": "invalid request body",
 			})
 		}
 
 		productId := uint(idUint64)
 
-		if err := h.productUC.AddProductSize(ctx,productId,sizes);err != nil {
+		if err := h.productUC.AddProductSize(ctx, productId, sizes); err != nil {
 			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 		}
 
 		return c.JSON(fiber.Map{
-			"message":"size added successfully",
+			"message": "size added successfully",
 		})
 	}
 }

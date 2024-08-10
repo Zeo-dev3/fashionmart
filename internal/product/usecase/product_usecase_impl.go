@@ -61,8 +61,8 @@ func (u *productUsecase) GetAllProducts(ctx context.Context) ([]models.ProductDe
 	return converter.ToProductDetailResponses(products), nil
 }
 
-func (u *productUsecase) AddProductSize(ctx context.Context,productId uint,sizes []*entity.Size) error {
-	err := u.productRepo.AddSize(ctx,productId,sizes)
+func (u *productUsecase) AddProductSize(ctx context.Context, productId uint, sizes []*entity.Size) error {
+	err := u.productRepo.AddSize(ctx, productId, sizes)
 	if err != nil {
 		return err
 	}

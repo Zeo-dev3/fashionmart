@@ -1,11 +1,4 @@
 services:
-  app:
-    build: .
-    ports:
-      - 3000:3000
-    depends_on:
-      - database
-      
   database:
     image: postgres:latest
     ports:
@@ -16,6 +9,17 @@ services:
       - POSTGRES_DB=store_db
     volumes:
       - db-data:/var/lib/postgresql/data
+
+  app:
+    build: 
+      context: .
+      dockerfile: dockerfile
+    container_name: fashionmart_api
+    ports:
+      - 3000:3000
+    depends_on:
+      - database
+      
 
 volumes:
   db-data:
