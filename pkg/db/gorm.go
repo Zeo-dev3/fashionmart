@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/Zeo-dev3/fashionmart/config"
 	"gorm.io/driver/postgres"
@@ -22,6 +23,17 @@ func NewDB(cfg *config.Config) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Mengakses objek *sql.DB
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
+	}
+
+	// Mengatur connection pooling
+	sqlDB.SetMaxIdleConns(10)                  // Jumlah koneksi idle maksimum
+	sqlDB.SetMaxOpenConns(100)                 // Jumlah koneksi terbuka maksimum
+	sqlDB.SetConnMaxLifetime(30 * time.Minute) // Masa hidup koneksi
 
 	return db, nil
 }

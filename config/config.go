@@ -11,6 +11,7 @@ type Config struct {
 	Postgres PostgresConfig
 	Server   ServerConfig
 	Jwt      JwtConfig
+	Swagger  SwaggerConfig
 }
 
 type PostgresConfig struct {
@@ -29,6 +30,13 @@ type ServerConfig struct {
 
 type JwtConfig struct {
 	SecretKey string
+}
+
+type SwaggerConfig struct {
+	BasePath string
+	FilePath string
+	Path     string
+	Title    string
 }
 
 func LoadConfig(fileName string) (*viper.Viper, error) {

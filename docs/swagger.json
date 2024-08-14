@@ -1,0 +1,304 @@
+{
+    "openapi":"3.0.3",
+    "info": {
+        "title": "Fashionmart api",
+        "description": "Api for simple ecommerce",
+        "contact": {
+            "name": "Zeo-dev3",
+            "email": "zeoraa31@gmail.com",
+            "url": "https://github.com/Zeo-dev3/"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/api",
+            "description": "local server"
+        }
+    ],
+    "paths": {
+        "/auth/register":{
+            "post":{
+                "tags": ["Auth API"],
+                "description": "Endpoint for regist new user",
+                "requestBody": {
+                    "content": {
+                        "aplication/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "name" :{
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "phone":{
+                                        "type": "number"
+                                    }
+                                },
+                                "required": ["name","email","password"],
+                                "example":{
+                                    "name":"user",
+                                    "email":"user@gmail.com",
+                                    "password":"user123"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "success regist new user",
+                        "content": {
+                            "application/json" : {
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "user" : {
+                                            "type": "object",
+                                            "properties": {
+                                                "user_id":{
+                                                    "type": "string"
+                                                },
+                                                "user_email": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "created_at":{
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example":{
+                                        "message":"regist user success",
+                                        "user": {
+                                            "user_id": "755f0e80-0e28-4dcd-b263-e2525cbafdcf",
+                                            "user_email": "user@gmail.com"
+                                        },
+                                        "created_at":"2024-08-06 02:03:55.977232+00"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login":{
+            "post":{
+                "tags": ["Auth API"],
+                "description": "Endpoint for user login",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "email":{
+                                        "type": "string"
+                                    },
+                                    "password":{
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["email","password"],
+                                "example":{
+                                    "email":"user@gmail.com",
+                                    "password":"user123"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "Login success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "token":{
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example":{
+                                        "message":"login success",
+                                        "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjM0NDY5NzIsInVzZXJfZW1haWwiOiJzZWxsZXJAZ21haWwuY29tIiwidXNlcl9pZCI6IjhjMjE0YTgwLTRiMjMtNGJlNy05ODhhLWViNjhiYzM2YWJlMyIsInVzZXJfcm9sZSI6IkFkbWluIn0.VBasSbiihW84jNEG-AOlaFPz5Oaua7IOnNK2vsUEzsY"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/update-role":{
+            "description": "Endpoint for update role user",
+            "post":{
+                "tags": ["Auth API"],
+                "parameters": [
+                    {
+                        "description": "Auth token admin role",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjM0NDY5NzIsInVzZXJfZW1haWwiOiJzZWxsZXJAZ21haWwuY29tIiwidXNlcl9pZCI6IjhjMjE0YTgwLTRiMjMtNGJlNy05ODhhLWViNjhiYzM2YWJlMyIsInVzZXJfcm9sZSI6IkFkbWluIn0.VBasSbiihW84jNEG-AOlaFPz5Oaua7IOnNK2vsUEzsY"
+                        }
+                    }
+                ],
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "user_id":{
+                                        "type": "string"
+                                    },
+                                    "role":{
+                                        "type": "string",
+                                        "enum": ["Admin","user"]
+                                    }
+                                },
+                                "required": ["user_id","role"]
+                            },
+                            "example":{
+                                "user_id": "755f0e80-0e28-4dcd-b263-e2525cbafdcf",
+                                "role": "Admin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200" :{
+                        "description": "Update role success",
+                        "content": {
+                            "application/json": {
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "message":{
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "role updated successfully"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/product":{
+            "post":{
+                "parameters": [
+                    {
+                        "description": "Auth token admin role",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjM0NDY5NzIsInVzZXJfZW1haWwiOiJzZWxsZXJAZ21haWwuY29tIiwidXNlcl9pZCI6IjhjMjE0YTgwLTRiMjMtNGJlNy05ODhhLWViNjhiYzM2YWJlMyIsInVzZXJfcm9sZSI6IkFkbWluIn0.VBasSbiihW84jNEG-AOlaFPz5Oaua7IOnNK2vsUEzsY"
+                        }
+                    }
+                ],
+                "tags": ["Product API"],
+                "description": "Endpoint for get all products data",
+                "requestBody": {
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "name":{"type": "string"},
+                                    "description":{
+                                        "type": "string"
+                                    },
+                                    "current_price":{
+                                        "type": "number"
+                                    },
+                                    "original_price":{
+                                        "type": "number"
+                                    },
+                                    "currency":{
+                                         "type": "string",
+                                         "enum": ["IDR","USD"]
+                                    }
+                                    },
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "current_price",
+                                    "original_price",
+                                    "currency"
+                                ],
+                                "example":{
+                                    "Name": "jmk48",
+                                    "Description": "Baju ori member jmk48",
+                                    "CurrentPrice": 100000,
+                                    "OriginalPrice": 120000,
+                                    "Currency": "IDR"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "success create product",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "message":{
+                                            "type": "string"
+                                        },
+                                        "product_data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "product_name":{
+                                                    "type": "string"
+                                                },
+                                                "productId":{
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "example":{
+                                        "message": "succes added product",
+                                        "product_data": {
+                                            "product_name": "test",
+                                            "product_id": 1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

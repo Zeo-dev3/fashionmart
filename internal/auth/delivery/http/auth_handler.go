@@ -70,7 +70,8 @@ func (h authHandler) Login() fiber.Handler {
 		}
 
 		return c.JSON(fiber.Map{
-			"token": token,
+			"message": "login success",
+			"token":   token,
 		})
 	}
 }

@@ -28,9 +28,9 @@ func (h *productHandler) AddProduct() fiber.Handler {
 		var productReq models.ProductRequest
 		ctx := c.Context()
 
-		if err := utils.ValidateRequest(c,&productReq); err != nil {
+		if err := utils.ValidateRequest(c, &productReq); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"message": "bad request, cannot parse json",
+				"message": "bad request, cannot parse json :" + err.Error(),
 			})
 		}
 
@@ -45,7 +45,7 @@ func (h *productHandler) AddProduct() fiber.Handler {
 			"message": "succes added product",
 			"product_data": fiber.Map{
 				"product_id":   createdProduct.ID,
-				"producr_name": createdProduct.Name,
+				"product_name": createdProduct.Name,
 			},
 		})
 	}

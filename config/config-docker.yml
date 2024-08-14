@@ -12,3 +12,9 @@ server:
 
 jwt:
   SecretKey: UwI3B03mFDV1gefDnCB0DQoFy9/rlZ8MNw4ksu2X1NzSSy9gcziNWxzsMKIZdGhn1DTEczB7YJ4uH3lfErTkaQ==
+
+swagger:
+  BasePath: /
+  FilePath: ./docs/swagger.json
+  Path: swagger
+  title: swagger api doc
