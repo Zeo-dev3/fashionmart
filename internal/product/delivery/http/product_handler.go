@@ -51,6 +51,17 @@ func (h *productHandler) AddProduct() fiber.Handler {
 	}
 }
 
+func (h *productHandler) GetAllProducts() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		ctx := c.Context()
+		products, err := h.productUC.GetAllProducts(ctx)
+		if err != nil {
+			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
+		return c.Status(http.StatusOK).JSON(products)
+	}
+}
+
 func (h *productHandler) GetProductById() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		idParam := c.Params("id")
@@ -104,16 +115,6 @@ func (h *productHandler) AddProductColor() fiber.Handler {
 	}
 }
 
-func (h *productHandler) GetAllProducts() fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := c.Context()
-		products, err := h.productUC.GetAllProducts(ctx)
-		if err != nil {
-			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-		}
-		return c.Status(http.StatusOK).JSON(products)
-	}
-}
 
 func (h *productHandler) AddProductSize() fiber.Handler {
 	return func(c *fiber.Ctx) error {
