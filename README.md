@@ -9,6 +9,7 @@ This repository contains the backend API for a single-brand e-commerce store, re
   - [Installation](#installation)
 - [Usage](#usage)
 - [Tech Stack](#tech-stack)
+- [Swagger Documentation](#swagger-documentation)
 - [Contributing](#contributing)
 - [License](#license)
 
