@@ -6,7 +6,7 @@ import (
 )
 
 func MapAuthRoutes(app *fiber.App, h auth.Handler, authMW fiber.Handler, adminMW fiber.Handler) {
-	group := app.Group("/auth")
+	group := app.Group("/api/auth")
 
 	group.Post("/register", h.Register())
 	group.Post("/login", h.Login())

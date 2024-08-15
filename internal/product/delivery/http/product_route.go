@@ -6,7 +6,7 @@ import (
 )
 
 func MapProductRoutes(app *fiber.App, productHandler product.Handler, authMW fiber.Handler, adminMw fiber.Handler) {
-	group := app.Group("/product")
+	group := app.Group("/api/product")
 
 	group.Get("/", productHandler.GetAllProducts())
 	group.Post("/", authMW, adminMw, productHandler.AddProduct())
