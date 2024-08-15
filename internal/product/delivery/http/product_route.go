@@ -5,12 +5,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func MapProductRoutes(app *fiber.App, productHandler product.Handler, authMW fiber.Handler, adminMw fiber.Handler) {
-	group := app.Group("/api/product")
-
-	group.Get("/", productHandler.GetAllProducts())
-	group.Post("/", authMW, adminMw, productHandler.AddProduct())
-	group.Get("/:id", productHandler.GetProductById())
-	group.Post("/:id/colors", authMW, adminMw, productHandler.AddProductColor())
-	group.Post("/:id/sizes", authMW, adminMw, productHandler.AddProductSize())
+func MapProductRoutes(route fiber.Router, productHandler product.Handler, authMW fiber.Handler, adminMw fiber.Handler) {
+	route.Get("/product", productHandler.GetAllProducts())
+	route.Post("/product", authMW, adminMw, productHandler.AddProduct())
+	route.Get("/product/:id", productHandler.GetProductById())
+	route.Post("/product/:id/colors", authMW, adminMw, productHandler.AddProductColor())
+	route.Post("/product/:id/sizes", authMW, adminMw, productHandler.AddProductSize())
 }

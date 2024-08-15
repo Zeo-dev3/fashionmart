@@ -38,8 +38,10 @@ func (s *Server) MapHandlres(app *fiber.App) error {
 	}
 	s.app.Use(swagger.New(swaggerCfg))
 
-	authHttp.MapAuthRoutes(s.app, authHandler, authMiddleware, adminMiddleware)
-	productHttp.MapProductRoutes(s.app, productHandler, authMiddleware, adminMiddleware)
+	apiPrefix := s.app.Group("/api")
+
+	authHttp.MapAuthRoutes(apiPrefix, authHandler, authMiddleware, adminMiddleware)
+	productHttp.MapProductRoutes(apiPrefix, productHandler, authMiddleware, adminMiddleware)
 
 	return nil
 }
