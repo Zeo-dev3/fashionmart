@@ -8,4 +8,6 @@ type Handler interface {
 	AddProductColor() fiber.Handler
 	GetAllProducts() fiber.Handler
 	AddProductSize() fiber.Handler
+	AddProductImage() fiber.Handler
+	GetProductImage() fiber.Handler
 }

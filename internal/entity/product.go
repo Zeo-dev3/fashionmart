@@ -20,6 +20,7 @@ type Product struct {
 	Sizes          []Size    `gorm:"many2many:product_sizes;"`
 	CreatedAt      time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt      time.Time `gorm:"autoCreateTime;autoUpdateTime" json:"updated_at"`
+	Image          string
 }
 
 type Color struct {

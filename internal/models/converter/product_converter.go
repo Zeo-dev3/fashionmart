@@ -47,6 +47,7 @@ func ToProductDetailResp(productEntity *entity.Product) models.ProductDetailResp
 		Sizes:          sizes,
 		CreatedAt:      productEntity.CreatedAt,
 		UpdatedAt:      productEntity.UpdatedAt,
+		Image: productEntity.Image,
 	}
 }
 
@@ -90,5 +91,6 @@ func ToProductDetailResponse(product *entity.Product) models.ProductDetailRespon
 		Sizes:          sizes,
 		CreatedAt:      product.CreatedAt,
 		UpdatedAt:      product.UpdatedAt,
+		Image: product.Image,
 	}
 }

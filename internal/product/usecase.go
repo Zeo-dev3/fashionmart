@@ -13,4 +13,5 @@ type UseCase interface {
 	AddProductColor(ctx context.Context, productId uint, colors []*entity.Color) error
 	GetAllProducts(ctx context.Context) ([]models.ProductDetailResponse, error)
 	AddProductSize(ctx context.Context, productId uint, sizes []*entity.Size) error
+	AddProductImage(ctx context.Context,productId uint,path string) error
 }

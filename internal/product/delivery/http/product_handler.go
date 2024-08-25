@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/Zeo-dev3/fashionmart/internal/entity"
@@ -115,7 +117,6 @@ func (h *productHandler) AddProductColor() fiber.Handler {
 	}
 }
 
-
 func (h *productHandler) AddProductSize() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		ctx := c.Context()
@@ -145,5 +146,106 @@ func (h *productHandler) AddProductSize() fiber.Handler {
 		return c.JSON(fiber.Map{
 			"message": "size added successfully",
 		})
+	}
+}
+
+func (h *productHandler) AddProductImage() fiber.Handler {
+    return func(c *fiber.Ctx) error {
+        ctx := c.Context()
+        productId := c.Params("id")
+        file, err := c.FormFile("image")
+
+        if err != nil {
+            return c.Status(fiber.ErrBadRequest.Code).JSON(fiber.Map{
+                "message": "failed to retrieve file",
+            })
+        }
+
+        productUint64, err := strconv.ParseUint(productId, 10, 64)
+        if err != nil {
+            return c.Status(fiber.ErrBadRequest.Code).JSON(fiber.Map{
+                "message": "invalid product id",
+            })
+        }
+
+        productUint := uint(productUint64)
+        fileName := fmt.Sprintf("%d-%s", productUint, file.Filename)
+
+        // Get the current working directory
+        currentDir, err := os.Getwd()
+        if err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+                "message": "failed to get current working directory: " + err.Error(),
+            })
+        }
+
+        // Combine current working directory with the upload path
+        uploadDir := filepath.Join(currentDir, "uploads", "image", "product")
+
+        // Create the directory if it doesn't exist
+        if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+                "message": "failed to create directory: " + err.Error(),
+            })
+        }
+
+        destination := filepath.Join(uploadDir, fileName)
+
+        err = c.SaveFile(file, destination)
+        if err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+                "message": "failed save product image to server :" + err.Error(),
+            })
+        }
+
+        if err := h.productUC.AddProductImage(ctx, productUint, destination); err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+                "message": "failed add image path in database : "+err.Error(),
+            })
+        }
+
+        return c.JSON(fiber.Map{
+            "message": "successfully add product image to server",
+        })
+    }
+}
+
+func (h *productHandler) GetProductImage() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		ctx := c.Context()
+		id := c.Params("id")
+		idUint64,err := strconv.ParseUint(id,10,64)
+
+		if err != nil{
+			return c.Status(fiber.ErrBadRequest.Code).JSON(fiber.Map{
+				"message":"invalid product id",
+			})
+		}
+
+		productId := uint(idUint64)
+		product,err := h.productUC.GetProductById(ctx,productId)
+
+		if err != nil {
+            return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+                "error": fmt.Sprintf("Product with ID %d not found", productId),
+            })
+        }
+
+		imagePath := product.Image
+
+		if imagePath == "" {
+            return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+                "error": "Image not found for the specified product",
+            })
+        }
+
+		err = c.SendFile(imagePath)
+		if err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+                "error": fmt.Sprintf("Failed to send image file: %v", err),
+            })
+        }
+
+		return nil
 	}
 }

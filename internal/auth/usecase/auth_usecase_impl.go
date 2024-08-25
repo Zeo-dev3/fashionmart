@@ -11,6 +11,7 @@ import (
 	"github.com/Zeo-dev3/fashionmart/internal/entity"
 	"github.com/Zeo-dev3/fashionmart/internal/models"
 	"github.com/Zeo-dev3/fashionmart/internal/models/converter"
+	"github.com/Zeo-dev3/fashionmart/pkg/logger"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -19,10 +20,11 @@ import (
 type authUsecase struct {
 	authRepo auth.Repository
 	cfg      *config.Config
+	log      logger.Logger
 }
 
-func NewAuthUseCase(authRepo auth.Repository, cfg *config.Config) auth.UseCase {
-	return &authUsecase{authRepo: authRepo, cfg: cfg}
+func NewAuthUseCase(authRepo auth.Repository, cfg *config.Config, log logger.Logger) auth.UseCase {
+	return &authUsecase{authRepo: authRepo, cfg: cfg, log: log}
 }
 
 func (u *authUsecase) Register(ctx context.Context, user models.UserRegister) (models.UserResponse, error) {
@@ -32,6 +34,7 @@ func (u *authUsecase) Register(ctx context.Context, user models.UserRegister) (m
 	rawPassword := []byte(user.Password)
 	hashedPassword, err := bcrypt.GenerateFromPassword(rawPassword, bcrypt.MinCost)
 	if err != nil {
+		u.log.Errorf("failed to has password for user with email %s : %v", user.Email, err)
 		return models.UserResponse{}, fmt.Errorf("failed to hash password %v", err)
 	}
 
@@ -41,10 +44,12 @@ func (u *authUsecase) Register(ctx context.Context, user models.UserRegister) (m
 	userEntity := converter.ToUserEntity(user)
 	err = u.authRepo.Register(ctx, &userEntity)
 	if err != nil {
+		u.log.Errorf("failed to save user with email %s:%v", user.Email, err)
 		return models.UserResponse{}, err
 	}
 
 	userResponse := converter.ToUserResponse(userEntity)
+	u.log.Infof("success save user with email %s to database", user.Email)
 	return userResponse, nil
 }
 
@@ -61,6 +66,7 @@ func (u *authUsecase) Login(ctx context.Context, email, password string) (string
 
 	token, err := generateJwtToken(user, u.cfg.Jwt.SecretKey)
 	if err != nil {
+		u.log.Errorf("failed to generate jwt token : %s", err)
 		return "", err
 	}
 

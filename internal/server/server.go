@@ -10,6 +10,7 @@ import (
 
 	"github.com/Zeo-dev3/fashionmart/config"
 	"github.com/Zeo-dev3/fashionmart/internal/entity"
+	"github.com/Zeo-dev3/fashionmart/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -18,14 +19,15 @@ type Server struct {
 	app *fiber.App
 	cfg *config.Config
 	db  *gorm.DB
+	log logger.Logger
 }
 
-func NewServer(cfg *config.Config, db *gorm.DB) *Server {
+func NewServer(cfg *config.Config, db *gorm.DB, log logger.Logger) *Server {
 	app := fiber.New(fiber.Config{
 		AppName: cfg.Server.AppName,
 		Prefork: cfg.Server.Prefork,
 	})
-	return &Server{app: app, cfg: cfg, db: db}
+	return &Server{app: app, cfg: cfg, db: db, log: log}
 }
 
 func (s *Server) Run() error {

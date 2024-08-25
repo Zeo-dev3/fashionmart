@@ -9,6 +9,7 @@ server:
   AppName: fashionmart-api
   Port: :3000
   Prefork: false
+  Mode: Development
 
 jwt:
   SecretKey: UwI3B03mFDV1gefDnCB0DQoFy9/rlZ8MNw4ksu2X1NzSSy9gcziNWxzsMKIZdGhn1DTEczB7YJ4uH3lfErTkaQ==
@@ -18,3 +19,10 @@ swagger:
   FilePath: ./docs/swagger.json
   Path: swagger
   title: swagger api doc
+
+logger:
+  Development: true
+  DisableCaller: false
+  DisableStacktrace: false
+  Encoding: json
+  Level: info

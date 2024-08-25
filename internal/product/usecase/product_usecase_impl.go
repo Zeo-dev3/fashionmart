@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Zeo-dev3/fashionmart/internal/entity"
 	"github.com/Zeo-dev3/fashionmart/internal/models"
@@ -67,4 +68,24 @@ func (u *productUsecase) AddProductSize(ctx context.Context, productId uint, siz
 		return err
 	}
 	return nil
+}
+
+func (u *productUsecase) AddProductImage(ctx context.Context, productId uint, path string) error {
+    // Pengecekan apakah productId ada di database
+    product, err := u.productRepo.GetById(ctx, productId)
+    if err != nil {
+        return fmt.Errorf("failed to find product: %v", err)
+    }
+
+	if product.Image != "" {
+        return fmt.Errorf("product with ID %d already has an image", productId)
+    }
+
+    // Jika produk ditemukan, lakukan update path image
+    err = u.productRepo.UpdatePath(ctx, productId, path)
+    if err != nil {
+        return fmt.Errorf("failed to update product image path: %v", err)
+    }
+
+    return nil
 }

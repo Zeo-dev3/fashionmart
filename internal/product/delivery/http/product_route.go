@@ -11,4 +11,6 @@ func MapProductRoutes(route fiber.Router, productHandler product.Handler, authMW
 	route.Get("/product/:id", productHandler.GetProductById())
 	route.Post("/product/:id/colors", authMW, adminMw, productHandler.AddProductColor())
 	route.Post("/product/:id/sizes", authMW, adminMw, productHandler.AddProductSize())
+	route.Post("/product/:id/image/upload",authMW,adminMw,productHandler.AddProductImage())
+	route.Get("/product/:id/image",productHandler.GetProductImage())
 }

@@ -14,11 +14,11 @@ import (
 
 func (s *Server) MapHandlres(app *fiber.App) error {
 	// setup repository
-	authRepo := authRepository.NewAuthRepo(s.db)
+	authRepo := authRepository.NewAuthRepo(s.db, s.log)
 	productRepo := productRepository.NewProductRepository(s.db)
 
 	// setup usecase
-	authUC := authUsecase.NewAuthUseCase(authRepo, s.cfg)
+	authUC := authUsecase.NewAuthUseCase(authRepo, s.cfg, s.log)
 	productUC := productUsecase.NewProductUsecas(productRepo)
 
 	// setup handler
@@ -33,8 +33,8 @@ func (s *Server) MapHandlres(app *fiber.App) error {
 	swaggerCfg := swagger.Config{
 		BasePath: s.cfg.Swagger.BasePath,
 		FilePath: s.cfg.Swagger.FilePath,
-		Path: s.cfg.Swagger.Path,
-		Title: s.cfg.Swagger.Title,		
+		Path:     s.cfg.Swagger.Path,
+		Title:    s.cfg.Swagger.Title,
 	}
 	s.app.Use(swagger.New(swaggerCfg))
 

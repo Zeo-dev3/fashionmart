@@ -12,6 +12,7 @@ type Config struct {
 	Server   ServerConfig
 	Jwt      JwtConfig
 	Swagger  SwaggerConfig
+	Logger   LoggerConfig
 }
 
 type PostgresConfig struct {
@@ -26,6 +27,7 @@ type ServerConfig struct {
 	AppName string
 	Port    string
 	Prefork bool
+	Mode    string
 }
 
 type JwtConfig struct {
@@ -37,6 +39,14 @@ type SwaggerConfig struct {
 	FilePath string
 	Path     string
 	Title    string
+}
+
+type LoggerConfig struct {
+	Development       bool
+	DisableCaller     bool
+	DisableStacktrace bool
+	Encoding          string
+	Level             string
 }
 
 func LoadConfig(fileName string) (*viper.Viper, error) {

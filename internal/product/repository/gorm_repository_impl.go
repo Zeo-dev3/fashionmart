@@ -117,3 +117,20 @@ func (r *productRepository) AddSize(ctx context.Context, productId uint, sizes [
 
 	return nil
 }
+
+func (r *productRepository) UpdatePath(ctx context.Context,productId uint,path string) error {
+	tx := r.db.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	if err := tx.Model(&entity.Product{}).Where("id = ?",productId).Update("image",path).Error; err != nil {
+		tx.Rollback()
+		return fmt.Errorf("cannot save path to the database : %v",err)
+	}
+
+	if err := tx.Commit().Error ;err != nil{
+		tx.Rollback()
+		return fmt.Errorf("failed to commit change : %v",err)
+	}
+
+	return nil
+}

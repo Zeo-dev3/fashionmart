@@ -24,6 +24,7 @@ type ProductDetailResponse struct {
 	Sizes          []Size
 	CreatedAt      time.Time `json:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at"`
+	Image 		   string
 }
 
 type ProductCreateResponse struct {
